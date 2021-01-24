@@ -17,21 +17,35 @@ export default {
 
     handleSocketInformation(data) {
 
-      if (data.user) this.setUser(data.user)
+      console.log(data)
 
-      if (data.teamColor) this.setColor(data.teamColor)
+      if (data.hasOwnProperty('user')) this.setUser(data.user)
 
-      if (data.wordList) this.setWordList(data.wordList)
+      if (data.hasOwnProperty('teamColor')) this.setColor(data.teamColor)
 
-      if (data.wordColorList) this.setColorsToWordList(data.wordColorList)
+      if (data.hasOwnProperty('wordList')) this.setWordList(data.wordList)
+
+      if (data.hasOwnProperty('wordColorList')) this.setColorsToWordList(data.wordColorList)
+
+      if (data.hasOwnProperty('gameInfo')) this.setGameInfo(data.gameInfo)
+
+      if (data.hasOwnProperty('curentTurnColor')) this.setCurentTurnColor(data.curentTurnColor)
+
+      if (data.hasOwnProperty('history')) this.setHistory(data.history)
+
+      if (data.hasOwnProperty('allowChooseCards')) this.setAllowChooseCards(data.allowChooseCards)
 
     },
 
     ...mapMutations({
+      setAllowChooseCards: 'app/SET_ALLOW_CHOOSE_CARDS',
+      setHistory: 'app/SET_HISTORY',
       setUser: 'user/SET_USER',
       setColor: 'user/SET_COLOR',
       setWordList: 'app/SET_WORD_LIST',
       setColorsToWordList: 'app/SET_COLORS_TO_WORD_LIST',
+      setGameInfo: 'app/SET_GAME_INFO',
+      setCurentTurnColor: 'app/SET_CURENT_TURN_COLOR',
       connect: 'app/CONNECT',
       disconnect: 'app/DISCONNECT',
     }),
@@ -63,11 +77,11 @@ export default {
       })
 
       socket.on('connect', () => {
-        console.log("connect")
+        this.connect()
       })
 
       socket.on('disconnect', () => {
-        console.log("disconnect")
+        this.disconnect()
       })
 
       // private msgs to curent user
@@ -75,35 +89,10 @@ export default {
         this.handleSocketInformation(data)
       })
 
-      // socket.on(`${params.userId}-user`, user => {
-      //   console.log("user info directly")
-      //   this.setUser(user)
-      // })
-
-      // socket.on(`${params.userId}-color`, color => {
-      //   console.log("team color", color)
-      //   this.setColor(color)
-      // })
-
-      // socket.on(`${params.userId}-list`, list => {
-      //   console.log("list for curent users", list)
-      //   this.setWordList(list)
-      // })
-
       // msgs for all users
       socket.on(`${params.channelId}`, data => {
         this.handleSocketInformation(data)
       })
-
-      // socket.on(`${params.channelId}-list`, list => {
-      //   console.log("list for all users", list)
-      //   this.setWordList(list)
-      // })
-
-      // socket.on(`${params.userId}-color-list`, info => {
-      //   console.log("colors list", info)
-      //   this.setColorsToWordList(info)
-      // })
 
       // window.Twitch.ext.listen(`whisper-${params.userId}`, this.push)
 
@@ -115,6 +104,12 @@ export default {
 </script>
 
 <style lang="scss">
+
+@font-face {
+    font-family: 'Open Sans';
+    src: url('./assets/SkyFallDone.ttf') format('truetype');
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

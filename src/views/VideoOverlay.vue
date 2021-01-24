@@ -2,37 +2,42 @@
 
 div(
   :class="$style.overlay"
-  @click="obj.data = 'kek'"
-) {{obj.data}}
+)
   div(
+    v-if="appLoaded"
     :class="$style.cards"
   )
     div(
-      :class="[$style.card, $style[info.color]]"
+      :class="[$style.card, { [$style.disabled]: !leader && !allowChooseCard }, $style[info.color]]"
       v-for="(info, word) in list"
     ) {{ word }}
 
   Configuration(
     :class="$style.configuration"
-
   )
+
+  History
 
 </template>
 
 <script>
 import { mapGetters, mapMutations, mapActions } from 'vuex'
 import Configuration from '../components/Configuration.vue'
+import History from '../components/History.vue'
 
 export default {
   name: 'VideoOverlay',
   data: () => ({
-    obj: {},
   }),
   components: {
     Configuration,
+    History,
   },
   computed: {
     ...mapGetters({
+      leader: 'user/LEADER',
+      allowChooseCard: 'app/ALLOW_CHOOSE_CARDS',
+      appLoaded: 'app/APP_LOADED',
       list: 'app/WORDS',
     }),
   }
@@ -70,8 +75,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: lightcyan;
-    opacity: 0.8;
+    background: rgb(224, 228, 224);
     cursor: pointer;
     &:hover {
       opacity: 1.0;
@@ -90,6 +94,15 @@ export default {
     &.blue {
       background: blue;
       color: white
+    }
+
+    &.disabled {
+      cursor: default;
+      background: gray;
+      &:hover {
+        opacity: 1.0;
+        // background: rgb(158, 161, 165);
+      }
     }
   }
 
