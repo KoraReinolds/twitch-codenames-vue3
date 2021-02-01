@@ -10,11 +10,15 @@ export default {
     curentTurnColor: '',
     history: [],
     allowChooseCard: false,
+    timer: 0,
+    results: {},
 
   }),
 
   getters: {
 
+    RESULTS: state => state.results,
+    TIMER: state => state.timer,
     ALLOW_CHOOSE_CARDS: state => state.allowChooseCard,
     HISTORY: state => state.history,
     APP_LOADED: state => state.appLoaded,
@@ -25,6 +29,16 @@ export default {
   },
   
   mutations: {
+
+    SET_RESULTS: (state, results) => {
+      const resultCount = results.reduce((res, { count }) => res + count, 0)
+      state.results = results.reduce((res, { word, count }) => {
+        res[word] = Math.round(count / resultCount * 100)
+        return res
+      }, {})
+    },
+
+    SET_TIMER: (state, timer) => state.timer = timer,
 
     SET_ALLOW_CHOOSE_CARDS: (state, val) => state.allowChooseCard = val,
 
@@ -73,6 +87,14 @@ export default {
   },
 
   actions: {
+
+    async SEND_ANSWER ({ commit, state, rootState, dispatch }, word) {
+
+      const res = await this.$axios.post('/register-answer', { word })
+      console.log('/register-answer ', { word })
+      return res
+
+    },
 
     async SEND_WORD ({ commit, state, rootState, dispatch }, data) {
 

@@ -35,9 +35,22 @@ export default {
 
       if (data.hasOwnProperty('allowChooseCards')) this.setAllowChooseCards(data.allowChooseCards)
 
+      if (data.hasOwnProperty('results')) this.setResults(data.results)
+
+      if (data.hasOwnProperty('timer')) {
+        let timer = data.timer
+        const id = setInterval(() => {
+          timer -= 1000
+          this.setTimer(timer / 1000)
+          if (!timer) clearInterval(id)
+        }, 1000)
+      }
+
     },
 
     ...mapMutations({
+      setResults: 'app/SET_RESULTS',
+      setTimer: 'app/SET_TIMER',
       setAllowChooseCards: 'app/SET_ALLOW_CHOOSE_CARDS',
       setHistory: 'app/SET_HISTORY',
       setUser: 'user/SET_USER',

@@ -9,6 +9,10 @@ div(
     div(
       v-if="gameInfo"
     ) {{ gameInfo }}
+    div(
+      v-if="timer"
+    ) Осталось {{ timer }}
+
     h1(
       v-if="broadcaster"
       @click="startApp"
@@ -20,13 +24,13 @@ div(
       v-if="leader"
     )
       input(
-        :disabled="curentTurnColor !== myColor"
+        :disabled="curentTurnColor !== myColor || allowChooseCard"
         :placeholder="curentTurnColor !== myColor ? 'Ожидается слово от капитана другой команды' : 'Введите слово'"
         v-model="word"
       )
       select(
         v-model="number"
-        :disabled="curentTurnColor !== myColor"
+        :disabled="curentTurnColor !== myColor || allowChooseCard"
       )
         option(
           disabled
@@ -53,11 +57,13 @@ import { mapGetters, mapActions } from 'vuex';
 export default {
   name: 'Configuration',
   data: () => ({
-    word: "",
-    number: "",
+    word: "123",
+    number: "2",
   }),
   computed: {
     ...mapGetters({
+      allowChooseCard: 'app/ALLOW_CHOOSE_CARDS',
+      timer: 'app/TIMER',
       gameInfo: 'app/GAME_INFO',
       curentTurnColor: 'app/CURENT_TURN_COLOR',
       broadcaster: 'user/BROADCASTER',
@@ -73,8 +79,8 @@ export default {
         number: this.number,
         color: this.myColor,
       })
-      this.word = ""
-      this.number = ""
+      // this.word = ""
+      // this.number = ""
     },
     ...mapActions({
       startApp: 'app/START_APP',

@@ -10,7 +10,12 @@ div(
     div(
       :class="[$style.card, { [$style.disabled]: !leader && !allowChooseCard }, $style[info.color]]"
       v-for="(info, word) in list"
-    ) {{ word }}
+      @click="allowChooseCard && sendAnswer(word)"
+    )
+      div {{ word }}
+      div(
+        v-if="Object.values(results).length"
+      ) {{ results[word] ? results[word] : 0 }} %
 
   Configuration(
     :class="$style.configuration"
@@ -35,11 +40,17 @@ export default {
   },
   computed: {
     ...mapGetters({
+      results: 'app/RESULTS',
       leader: 'user/LEADER',
       allowChooseCard: 'app/ALLOW_CHOOSE_CARDS',
       appLoaded: 'app/APP_LOADED',
       list: 'app/WORDS',
     }),
+  },
+  methods: {
+    ...mapActions({
+      sendAnswer: 'app/SEND_ANSWER',
+    })
   }
 }
 
@@ -75,6 +86,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
     background: rgb(224, 228, 224);
     cursor: pointer;
     &:hover {
